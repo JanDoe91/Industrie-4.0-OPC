@@ -28,7 +28,8 @@ import org.opcfoundation.ua.builtintypes.Variant;
 //})
 @XmlRootElement
 public class OpcInt extends Type{
-	
+	@XmlElement//(required=true)
+	private int value;
 
 	
 	public OpcInt(){
@@ -37,8 +38,8 @@ public class OpcInt extends Type{
 	public OpcInt(String bezeichnung, Variant value, StatusCode statusCode,
 			DateTime sourceTimestamp, UnsignedShort sourcePicoseconds,
 			DateTime serverTimestamp, UnsignedShort serverPicoseconds){
-		super(bezeichnung, value, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
-
+		super(bezeichnung, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
+		this.value = (int) value.getValue();
 	}
 
 }

@@ -21,7 +21,8 @@ import org.opcfoundation.ua.builtintypes.Variant;
 //})
 @XmlRootElement
 public class OpcDouble extends Type {
-	
+	@XmlElement//(required=true)
+	private double value;
 
 	
 	
@@ -32,8 +33,8 @@ public class OpcDouble extends Type {
 			DateTime sourceTimestamp, UnsignedShort sourcePicoseconds,
 			DateTime serverTimestamp, UnsignedShort serverPicoseconds){
 		
-		super(bezeichnung, value, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
-
+		super(bezeichnung, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
+		this.value = (double) value.getValue();
 	}
 
 }
