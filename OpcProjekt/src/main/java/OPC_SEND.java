@@ -7,7 +7,7 @@ import OPCTest.Adapter.OPC;
 import OPCTest.Config.Config;
 
 
-public class Main {
+public class OPC_SEND {
 
 	//Demo -> erzeuge Config, übergebe an Adapter, erstelle DataItems(Types)
 

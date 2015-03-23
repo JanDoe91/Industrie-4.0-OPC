@@ -47,5 +47,6 @@
 	<classpathentry kind="lib" path="D:/Programme/Libraries/Industrie 4.0/Prosys-OPC-UA-Java-SDK-Client-Server-Evaluation-2.1.0-436/lib/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="D:/Programme/Libraries/Industrie 4.0/Prosys-OPC-UA-Java-SDK-Client-Server-Evaluation-2.1.0-436/lib/slf4j-log4j12-1.7.7.jar"/>
 	<classpathentry kind="lib" path="D:/Programme/Libraries/RabbitMQ/rabbitmq-java-client-bin-3.5.0/rabbitmq-client.jar"/>
+	<classpathentry kind="lib" path="D:/Programme/Libraries/esper-5.2.0/esper-5.2.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -3,6 +3,8 @@ package OPCTest.Types;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -19,6 +21,7 @@ import org.opcfoundation.ua.builtintypes.StatusCode;
 import org.opcfoundation.ua.builtintypes.UnsignedShort;
 import org.opcfoundation.ua.builtintypes.Variant;
 
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
@@ -132,9 +135,8 @@ public abstract class Type {
 				// Get String from StrinWriter
 				String message = sw.toString();
 				// Print the Message
-				System.out.println(message);
 
-				createQueue(message);
+				createQueue(message, this.bezeichnung);
 				// System.out.println("XML geschrieben in Datei: " +
 				// f.toString());
 			}
@@ -145,17 +147,26 @@ public abstract class Type {
 
 	}
 
-	private static void createQueue(String message) {
+	private static void createQueue(String message, String bezeichnung) {
 		Connection connection = null;
 		Channel channel = null;
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost("localhost");
+			factory.setHost(host);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-
-			channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+			
+			//Set Header of Message with bezeichnung
+			BasicProperties.Builder prop = new BasicProperties.Builder();
+			Map<String, Object> headers = new HashMap <String, Object>();
+			headers.put("type", bezeichnung);
+			prop.headers(headers);
+			BasicProperties theProp = prop.build();
+			
+			//Send the Message to Queue
+			channel.basicPublish("", QUEUE_NAME, theProp, message.getBytes());
+			
 			System.out.println(" [x] Sent '" + message + "'");
 			channel.close();
 			connection.close();
