@@ -37,7 +37,7 @@ import com.rabbitmq.client.Channel;
 //})
 @XmlRootElement
 // (name = "Type")
-public abstract class Type {
+public abstract class Type <T>{
 
 	private final static String host = "localhost";
 	private final static String QUEUE_NAME = "ProSys_OPC";
@@ -196,5 +196,21 @@ public abstract class Type {
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
+	
+	public T getValue(){
+		if( this instanceof OpcDouble){
+			OpcDouble tmp = (OpcDouble) this;
+			T tmp2 = (T) Double.valueOf(tmp.getValue2());
+
+			return tmp2;
+		}else if(this instanceof OpcInt){
+			OpcInt tmp = (OpcInt) this;
+			T tmp2 = (T) Integer.valueOf(tmp.getValue2());
+
+			return tmp2;
+		}
+		return null;
+	}
+
 
 }

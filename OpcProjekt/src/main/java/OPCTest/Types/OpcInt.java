@@ -41,5 +41,8 @@ public class OpcInt extends Type{
 		super(bezeichnung, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
 		this.value = (int) value.getValue();
 	}
+	public int getValue2() {
+		return value;
+	}
 
 }

@@ -20,7 +20,7 @@ import org.opcfoundation.ua.builtintypes.Variant;
 //		"serverPicoseconds"
 //})
 @XmlRootElement
-public class OpcDouble extends Type {
+public class OpcDouble<T> extends Type <T>{
 	@XmlElement//(required=true)
 	private double value;
 
@@ -36,5 +36,9 @@ public class OpcDouble extends Type {
 		super(bezeichnung, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
 		this.value = (double) value.getValue();
 	}
+	public double getValue2() {
+		return value;
+	}
+	
 
 }

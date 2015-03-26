@@ -14,7 +14,7 @@ public class OPC_SEND {
 	public static void main(String[] args) {
 		
 		//Erzeuge Config
-		Vector<String> dataItemsOne = new Vector();
+		Vector<String> dataItemsOne = new Vector<String>();
 		dataItemsOne.add("5;Counter1");
 		dataItemsOne.add("5;Expression1");
 		
