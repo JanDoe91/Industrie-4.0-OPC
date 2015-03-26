@@ -5,9 +5,14 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import OPCTest.Reporting.NewOPCEvent;
+import OPCTest.Reporting.OPCListener;
 import OPCTest.Types.OpcDouble;
 import OPCTest.Types.OpcInt;
 
+import com.espertech.esper.client.EPServiceProvider;
+import com.espertech.esper.client.EPServiceProviderManager;
+import com.espertech.esper.client.EPStatement;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -17,6 +22,7 @@ import com.rabbitmq.client.QueueingConsumer;
 public class OPC_REC {
 	private final static String host = "localhost";
 	private final static String QUEUE_NAME = "ProSys_OPC";
+	private static EPServiceProvider epService;
 	
 	public static void main(String[] args) {
 		try{
@@ -42,7 +48,7 @@ public class OPC_REC {
 	}
 	private static void createXML(String message, String contentType){
 		
-		
+		epService = EPServiceProviderManager.getDefaultProvider();
 		StringWriter sw = new StringWriter();
 		sw.write(message);
 		
@@ -73,8 +79,10 @@ public class OPC_REC {
 			createDoubleXML(message);
 		}
 
-		
-	
+		String expression = "select avg(type.getValue()) from OPCTest.Reporting.NewOPCEvent.win:time(30 sec)";
+		EPStatement statement = epService.getEPAdministrator().createEPL(expression);
+		OPCListener listener = new OPCListener();
+		statement.addListener(listener);
 		
 	}
 	
@@ -85,7 +93,9 @@ public class OPC_REC {
 		
 		
 		OpcDouble newDouble =  (OpcDouble) jaxbUnmarshaller.unmarshal(new StringReader(message));
-		System.out.println(newDouble.toString());
+
+		NewOPCEvent opcEvent = new NewOPCEvent(newDouble.getBezeichnung(), newDouble);
+		epService.getEPRuntime().sendEvent(opcEvent);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -97,7 +107,10 @@ public class OPC_REC {
 		
 		
 		OpcInt newInt =  (OpcInt) jaxbUnmarshaller.unmarshal(new StringReader(message));
-		System.out.println(newInt.toString());
+		
+		//Create and Send Event
+		NewOPCEvent opcEvent = new NewOPCEvent(newInt.getBezeichnung(), newInt);
+		epService.getEPRuntime().sendEvent(opcEvent);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

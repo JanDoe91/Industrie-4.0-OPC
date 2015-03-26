@@ -193,4 +193,8 @@ public abstract class Type {
 		}
 	}
 
+	public String getBezeichnung() {
+		return bezeichnung;
+	}
+
 }
