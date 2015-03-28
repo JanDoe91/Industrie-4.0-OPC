@@ -22,7 +22,8 @@ import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 
-import OPCTest.Config.Config;
+import OPCTest.Config.MainConfig;
+import OPCTest.Config.SendConfig;
 import OPCTest.Types.OpcDouble;
 import OPCTest.Types.OpcInt;
 
@@ -35,7 +36,7 @@ import com.prosysopc.ua.client.UaClient;
 
 public class OPC extends Adapter {
 
-	public OPC(Config config) {
+	public OPC(SendConfig config) {
 		super(config);
 
 	}

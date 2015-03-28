@@ -6,12 +6,13 @@ import java.util.Vector;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import OPCTest.Config.RecConfig;
 import OPCTest.Reporting.NewOPCEvent;
 import OPCTest.Reporting.OPCListener;
+import OPCTest.Reporting.Reporter;
 import OPCTest.Types.OpcDouble;
 import OPCTest.Types.OpcInt;
 
-import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
@@ -22,50 +23,33 @@ import com.rabbitmq.client.QueueingConsumer;
 
 
 public class OPC_REC <T>{
-	private final static String host = "localhost";
-	private final static String QUEUE_NAME = "ProSys_OPC";
-	private static EPServiceProvider epService;
+
 	
+	private static RecConfig config = new RecConfig();
+	private static Reporter reporter = new Reporter();
 	public static void main(String[] args) {
 		try{
+			
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(host);
+		factory.setHost(config.getHost());
 		Connection connection = factory.newConnection();
 		Channel channel = connection.createChannel();
-		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+		channel.queueDeclare(config.getQUEUE_NAME(), false, false, false, null);
 		QueueingConsumer consumer = new QueueingConsumer(channel);
-		channel.basicConsume(QUEUE_NAME, true, consumer);
+		channel.basicConsume(config.getQUEUE_NAME(), true, consumer);
 		
 		
 		//create Statements
-		epService = EPServiceProviderManager.getDefaultProvider();
-		Vector<String> expressions = new Vector<String>();
-		Vector<EPStatement> statements = new Vector <EPStatement>();
+		reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
+		reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
+		
+		
+		
 
-		
-		expressions.add("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
-		expressions.add("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
-		
-		
-		for(int i = 0; i<expressions.size(); i++){
-			EPStatement statement = epService.getEPAdministrator().createEPL(expressions.get(i));
-			OPCListener listen = new OPCListener();
-			statement.addListener(listen);
-			//Zeile ist momentan nicht nötig
-			//Falls in Zukunft auf Statements zugegriffen werden muss besteht über den Vector
-			//statements ein Zugriff auf die einzelenen Objekte
-			statements.add(statement);
-			
-		}
 
 		
 		
-//		
-//		EPStatement statement2= epService.getEPAdministrator().createEPL(expression2);
-//		OPCListener listener = new OPCListener();
-//		OPCListener listener2 = new OPCListener();
-//		statement.addListener(listener);
-//		statement2.addListener(listener2);
+
 		
 		while (true) {
 			QueueingConsumer.Delivery delivery = consumer.nextDelivery();
@@ -127,7 +111,7 @@ public class OPC_REC <T>{
 
 		NewOPCEvent opcEvent = new NewOPCEvent(newDouble.getBezeichnung(), newDouble);
 		
-		epService.getEPRuntime().sendEvent(opcEvent);
+		reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -142,7 +126,7 @@ public class OPC_REC <T>{
 		
 		//Create and Send Event
 		NewOPCEvent opcEvent = new NewOPCEvent(newInt.getBezeichnung(), newInt);
-		epService.getEPRuntime().sendEvent(opcEvent);
+		reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

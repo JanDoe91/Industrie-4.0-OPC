@@ -9,7 +9,8 @@ import org.opcfoundation.ua.core.ApplicationDescription;
 import org.opcfoundation.ua.core.ApplicationType;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 
-import OPCTest.Config.Config;
+import OPCTest.Config.MainConfig;
+import OPCTest.Config.SendConfig;
 
 import com.prosysopc.ua.ApplicationIdentity;
 import com.prosysopc.ua.SecureIdentityException;
@@ -17,10 +18,10 @@ import com.prosysopc.ua.client.UaClient;
 
 public abstract class Adapter {
 
-	protected Config config;
+	protected SendConfig config;
 
 	//Konstruktor
-	public Adapter (Config config){
+	public Adapter (SendConfig config){
 		this.config = config;
 	}
 	

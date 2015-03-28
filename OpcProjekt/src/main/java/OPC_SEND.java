@@ -4,7 +4,8 @@ import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.core.Identifiers;
 
 import OPCTest.Adapter.OPC;
-import OPCTest.Config.Config;
+import OPCTest.Config.MainConfig;
+import OPCTest.Config.SendConfig;
 
 
 public class OPC_SEND {
@@ -18,7 +19,7 @@ public class OPC_SEND {
 		dataItemsOne.add("5;Counter1");
 		dataItemsOne.add("5;Expression1");
 		
-		Config opcConfig1 = new Config("opc.tcp://localhost:53530/OPCUA/SimulationServer", dataItemsOne);
+		SendConfig opcConfig1 = new SendConfig("opc.tcp://localhost:53530/OPCUA/SimulationServer", dataItemsOne);
 		
 		//Übergebe Config an Adapter
 		OPC opcAdapter1 = new OPC(opcConfig1);

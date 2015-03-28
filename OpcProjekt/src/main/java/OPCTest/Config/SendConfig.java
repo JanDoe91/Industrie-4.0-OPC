@@ -2,18 +2,17 @@ package OPCTest.Config;
 
 import java.util.Vector;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
-public class Config {
+public class SendConfig extends MainConfig {
+	
 	private String serverUrl;
 	private Vector<String> dataItems;
 	
-	public Config (String serverUrl, Vector<String> dataItems){
+	public SendConfig(String serverUrl, Vector<String> dataItems) {
+		super();
 		this.serverUrl = serverUrl;
 		this.dataItems = dataItems;
 	}
-
+	
 	public String getServerUrl() {
 		return serverUrl;
 	}
@@ -29,4 +28,5 @@ public class Config {
 	public void setDataItems(Vector<String> dataItems) {
 		this.dataItems = dataItems;
 	}
+
 }
