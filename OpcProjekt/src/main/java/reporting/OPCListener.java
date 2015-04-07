@@ -1,4 +1,4 @@
-package OPCTest.Reporting;
+package reporting;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;

@@ -1,4 +1,4 @@
-package OPCTest.Adapter;
+package adapter;
 
 public class ERP {
 

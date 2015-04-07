@@ -1,4 +1,4 @@
-package OPCTest.Reporting;
+package reporting;
 
 import java.util.Vector;
 

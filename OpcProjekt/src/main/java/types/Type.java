@@ -1,4 +1,4 @@
-package OPCTest.Types;
+package types;
 
 import java.io.File;
 import java.io.IOException;

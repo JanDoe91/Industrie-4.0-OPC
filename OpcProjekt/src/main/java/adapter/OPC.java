@@ -1,4 +1,4 @@
-package OPCTest.Adapter;
+package adapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +22,8 @@ import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 
-import OPCTest.Config.MainConfig;
-import OPCTest.Config.SendConfig;
-import OPCTest.Types.OpcDouble;
-import OPCTest.Types.OpcInt;
+import types.OpcDouble;
+import types.OpcInt;
 
 import com.prosysopc.ua.ApplicationIdentity;
 import com.prosysopc.ua.SecureIdentityException;
@@ -33,6 +31,9 @@ import com.prosysopc.ua.client.MonitoredDataItem;
 import com.prosysopc.ua.client.MonitoredDataItemListener;
 import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.UaClient;
+
+import config.MainConfig;
+import config.SendConfig;
 
 public class OPC extends Adapter {
 	private UaClient client;

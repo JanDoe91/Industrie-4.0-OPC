@@ -1,4 +1,4 @@
-package OPCTest.UI;
+package ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -9,8 +9,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 
 
-import OPCTest.Operators.OPCReceiver;
-import OPCTest.Operators.OPCSender;
 
 import java.awt.Component;
 
@@ -22,6 +20,9 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
+import operators.OPCReceiver;
+import operators.OPCSender;
 
 public class OPCMainFrame extends JFrame {
 	private OPCSender opcSender;

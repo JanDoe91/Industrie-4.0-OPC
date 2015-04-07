@@ -1,4 +1,4 @@
-package OPCTest.Config;
+package config;
 
 import java.util.Vector;
 

@@ -1,9 +1,9 @@
 import java.util.Vector;
 
-import OPCTest.Config.SendConfig;
-import OPCTest.UI.OPCMainFrame;
+import ui.OPCMainFrame;
+import config.SendConfig;
 
-public class OPC_Main {
+public class OPC_Main_UI {
 	public static void main(String[] args) {
 		Vector<String> dataItemsOne = new Vector<String>();
 		dataItemsOne.add("5;Counter1");

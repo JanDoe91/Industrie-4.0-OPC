@@ -1,10 +1,10 @@
-package OPCTest.UI;
+package ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import OPCTest.Operators.OPCReceiver;
-import OPCTest.Operators.OPCSender;
+import operators.OPCReceiver;
+import operators.OPCSender;
 
 public class ButtonListener implements ActionListener {
 	private OPCSender opcSender;

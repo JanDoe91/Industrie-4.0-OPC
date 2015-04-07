@@ -1,6 +1,6 @@
-package OPCTest.Reporting;
+package reporting;
 
-import OPCTest.Types.Type;
+import types.Type;
 
 public class NewOPCEvent {
 	private String bezeichnung;

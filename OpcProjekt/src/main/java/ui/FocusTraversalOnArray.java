@@ -8,7 +8,7 @@
  * Contributors:
  *    Google, Inc. - initial API and implementation
  *******************************************************************************/
-package OPCTest.UI;
+package ui;
 
 import java.awt.Component;
 import java.awt.Container;

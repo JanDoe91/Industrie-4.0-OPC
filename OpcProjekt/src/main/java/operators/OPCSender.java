@@ -1,9 +1,9 @@
-package OPCTest.Operators;
+package operators;
 
 import java.util.Vector;
 
-import OPCTest.Adapter.OPC;
-import OPCTest.Config.SendConfig;
+import config.SendConfig;
+import adapter.OPC;
 
 public class OPCSender {
 

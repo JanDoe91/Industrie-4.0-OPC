@@ -1,4 +1,4 @@
-package OPCTest.Operators;
+package operators;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -7,16 +7,17 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import reporting.NewOPCEvent;
+import reporting.Reporter;
+import types.OpcDouble;
+import types.OpcInt;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
-import OPCTest.Config.RecConfig;
-import OPCTest.Reporting.NewOPCEvent;
-import OPCTest.Reporting.Reporter;
-import OPCTest.Types.OpcDouble;
-import OPCTest.Types.OpcInt;
+import config.RecConfig;
 
 public class OPCReceiver<T> implements Runnable{
 	private RecConfig config;
@@ -50,6 +51,10 @@ public class OPCReceiver<T> implements Runnable{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		reporter.addExpression("select type.getValue() from reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
+		reporter.addExpression("select type.getValue() from reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
+		
 		
 		boolean messagesLeft = true;
 		while (messagesLeft == true) {

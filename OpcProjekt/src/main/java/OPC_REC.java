@@ -6,12 +6,11 @@ import java.util.Vector;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
-import OPCTest.Config.RecConfig;
-import OPCTest.Reporting.NewOPCEvent;
-import OPCTest.Reporting.OPCListener;
-import OPCTest.Reporting.Reporter;
-import OPCTest.Types.OpcDouble;
-import OPCTest.Types.OpcInt;
+import reporting.NewOPCEvent;
+import reporting.OPCListener;
+import reporting.Reporter;
+import types.OpcDouble;
+import types.OpcInt;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
@@ -20,6 +19,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
+
+import config.RecConfig;
 
 public class OPC_REC<T> {
 
@@ -39,8 +40,8 @@ public class OPC_REC<T> {
 			channel.basicConsume(config.getQUEUE_NAME(), true, consumer);
 
 			// create Statements
-			reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
-			reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
+			reporter.addExpression("select type.getValue() from reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
+			reporter.addExpression("select type.getValue() from reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
 			boolean messagesLeft = true;
 			while (messagesLeft == true) {
 				QueueingConsumer.Delivery delivery = consumer
