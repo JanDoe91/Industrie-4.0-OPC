@@ -21,56 +21,51 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
+public class OPC_REC<T> {
 
-public class OPC_REC <T>{
-
-	
 	private static RecConfig config = new RecConfig();
 	private static Reporter reporter = new Reporter();
+
 	public static void main(String[] args) {
-		try{
-			
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(config.getHost());
-		Connection connection = factory.newConnection();
-		Channel channel = connection.createChannel();
-		channel.queueDeclare(config.getQUEUE_NAME(), false, false, false, null);
-		QueueingConsumer consumer = new QueueingConsumer(channel);
-		channel.basicConsume(config.getQUEUE_NAME(), true, consumer);
-		
-		
-		//create Statements
-		reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
-		reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
-		
-		
-		
+		try {
 
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost(config.getHost());
+			Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+			channel.queueDeclare(config.getQUEUE_NAME(), false, false, false,
+					null);
+			QueueingConsumer consumer = new QueueingConsumer(channel);
+			channel.basicConsume(config.getQUEUE_NAME(), true, consumer);
 
-		
-		
+			// create Statements
+			reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
+			reporter.addExpression("select type.getValue() from OPCTest.Reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
+			boolean messagesLeft = true;
+			while (messagesLeft == true) {
+				QueueingConsumer.Delivery delivery = consumer
+						.nextDelivery(2000);
+				if (delivery != null) {
+					String message = new String(delivery.getBody());
+					Map<String, Object> headers = delivery.getProperties()
+							.getHeaders();
+					String contentType = headers.get("type").toString();
 
-		
-		while (true) {
-			QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-			String message = new String(delivery.getBody());
-			Map<String, Object> headers = delivery.getProperties().getHeaders();
-			String contentType = headers.get("type").toString();
-			
-			
-			createXML(message, contentType);
-		}
-	}catch(Exception e){
-		e.printStackTrace();
+					createXML(message, contentType);
+				}else{
+					messagesLeft = false;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
-	private static void createXML(String message, String contentType){
-		
-		
+
+	private static void createXML(String message, String contentType) {
+
 		StringWriter sw = new StringWriter();
 		sw.write(message);
-		
-		
+
 		switch (contentType) {
 		case "Counter1":
 			createIntXML(message);
@@ -97,37 +92,39 @@ public class OPC_REC <T>{
 			createDoubleXML(message);
 		}
 
-		
-		
 	}
-	
-	private static void createDoubleXML(String message){
-		try{
-		JAXBContext doubleContext = JAXBContext.newInstance(OpcDouble.class);
-		Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
-		
-		
-		OpcDouble newDouble =  (OpcDouble) jaxbUnmarshaller.unmarshal(new StringReader(message));
 
-		NewOPCEvent opcEvent = new NewOPCEvent(newDouble.getBezeichnung(), newDouble);
-		
-		reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
-		}catch(Exception e){
+	private static void createDoubleXML(String message) {
+		try {
+			JAXBContext doubleContext = JAXBContext
+					.newInstance(OpcDouble.class);
+			Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
+
+			OpcDouble newDouble = (OpcDouble) jaxbUnmarshaller
+					.unmarshal(new StringReader(message));
+
+			NewOPCEvent opcEvent = new NewOPCEvent(newDouble.getBezeichnung(),
+					newDouble);
+
+			reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	private static void createIntXML(String message){
-		try{
-		JAXBContext doubleContext = JAXBContext.newInstance(OpcInt.class);
-		Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
-		
-		
-		OpcInt newInt =  (OpcInt) jaxbUnmarshaller.unmarshal(new StringReader(message));
-		
-		//Create and Send Event
-		NewOPCEvent opcEvent = new NewOPCEvent(newInt.getBezeichnung(), newInt);
-		reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
-		}catch(Exception e){
+
+	private static void createIntXML(String message) {
+		try {
+			JAXBContext doubleContext = JAXBContext.newInstance(OpcInt.class);
+			Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
+
+			OpcInt newInt = (OpcInt) jaxbUnmarshaller
+					.unmarshal(new StringReader(message));
+
+			// Create and Send Event
+			NewOPCEvent opcEvent = new NewOPCEvent(newInt.getBezeichnung(),
+					newInt);
+			reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

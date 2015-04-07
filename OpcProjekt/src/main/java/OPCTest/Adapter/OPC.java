@@ -35,10 +35,11 @@ import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.UaClient;
 
 public class OPC extends Adapter {
-
+	private UaClient client;
 	public OPC(SendConfig config) {
+		
 		super(config);
-
+		this.client = null;
 	}
 
 	protected static void initialize(UaClient client)
@@ -59,20 +60,20 @@ public class OPC extends Adapter {
 		client.setApplicationIdentity(identity);
 	}
 
-	public UaClient createClient() throws Exception {
+	public void createClient() throws Exception {
 		// Create client object
-		UaClient client = new UaClient(config.getServerUrl());
-		client.setSecurityMode(SecurityMode.NONE);
+		this.client = new UaClient(config.getServerUrl());
+		this.client.setSecurityMode(SecurityMode.NONE);
 
-		initialize(client);
-		client.connect();
-
-		return client;
+		initialize(this.client);
+		this.client.connect();
+		
+		
 	}
 
 	public void importData() throws Exception {
 		// Verbindungsaufbau
-		UaClient client = createClient();
+		createClient();
 
 		for (int i = 0; i < config.getDataItems().size(); i++) {
 			// Addresierung
@@ -82,15 +83,15 @@ public class OPC extends Adapter {
 			final String part2 = parts[1]; // 034556
 
 			NodeId target = new NodeId(part1, part2);
-			System.out.println(target);
+			//System.out.println(target);
 
 			Subscription subscription = new Subscription();
 			MonitoredDataItem item = new MonitoredDataItem(target,
 					Attributes.Value, MonitoringMode.Reporting);
-			System.out.println(item);
+			//System.out.println(item);
 
 			subscription.addItem(item);
-			client.addSubscription(subscription);
+			this.client.addSubscription(subscription);
 
 			item.setDataChangeListener(new MonitoredDataItemListener() {
 
@@ -127,6 +128,10 @@ public class OPC extends Adapter {
 				}
 			});
 		}
+	}
+	
+	public void disconnect(){
+		this.client.disconnect();
 	}
 
 	public static void createIntWriteXML(NodeId nodeId, DataValue arg1) {
