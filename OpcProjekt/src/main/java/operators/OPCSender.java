@@ -8,13 +8,13 @@ import adapter.OPC;
 public class OPCSender {
 
 	
-	private SendConfig opcConfig1;
+	private SendConfig opcConfig;
 	private OPC opcAdapter;
 	
 	public OPCSender(String ServerUrl, Vector<String> dataItemsOne){
 		SendConfig tmp = new SendConfig(ServerUrl, dataItemsOne);
-		this.opcConfig1 = tmp;
-		this.opcAdapter = new OPC(this.opcConfig1);
+		this.opcConfig = tmp;
+		this.opcAdapter = new OPC(this.opcConfig);
 	}
 	
 	public void startOPCAdapter(){

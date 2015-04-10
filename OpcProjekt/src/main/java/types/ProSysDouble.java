@@ -20,16 +20,16 @@ import org.opcfoundation.ua.builtintypes.Variant;
 //		"serverPicoseconds"
 //})
 @XmlRootElement
-public class OpcDouble<T> extends Type <T>{
+public class ProSysDouble<T> extends ProSysType <T>{
 	@XmlElement//(required=true)
 	private double value;
 
 	
 	
-	public OpcDouble(){
+	public ProSysDouble(){
 		
 	}
-	public OpcDouble(String bezeichnung, Variant value, StatusCode statusCode,
+	public ProSysDouble(String bezeichnung, Variant value, StatusCode statusCode,
 			DateTime sourceTimestamp, UnsignedShort sourcePicoseconds,
 			DateTime serverTimestamp, UnsignedShort serverPicoseconds){
 		

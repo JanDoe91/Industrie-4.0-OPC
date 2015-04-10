@@ -1,12 +1,12 @@
 package reporting;
 
-import types.Type;
+import types.ProSysType;
 
 public class NewOPCEvent {
 	private String bezeichnung;
-	private Type type;
+	private ProSysType type;
 	
-	public NewOPCEvent(String bezeichnung, Type type){
+	public NewOPCEvent(String bezeichnung, ProSysType type){
 		this.bezeichnung = bezeichnung;
 		this.type = type;
 	}
@@ -15,7 +15,7 @@ public class NewOPCEvent {
 		return bezeichnung;
 	}
 
-	public Type getType() {
+	public ProSysType getType() {
 		return type;
 	}
 	

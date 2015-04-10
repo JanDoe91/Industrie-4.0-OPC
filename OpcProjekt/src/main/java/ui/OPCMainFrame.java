@@ -10,6 +10,7 @@ import javax.swing.JButton;
 
 
 
+
 import java.awt.Component;
 
 import javax.swing.JTabbedPane;
@@ -24,6 +25,10 @@ import javax.swing.SwingConstants;
 import operators.OPCReceiver;
 import operators.OPCSender;
 
+import javax.swing.JComboBox;
+
+import config.configStrings;
+
 public class OPCMainFrame extends JFrame {
 	private OPCSender opcSender;
 	private OPCReceiver opcReceiver;
@@ -33,8 +38,17 @@ public class OPCMainFrame extends JFrame {
 	private JLabel lb_sender_status;
 	private JLabel lb_receiver_status;
 	
+	private JButton btn_start_sender;
+	private JButton btn_start_receiver;
+	
+
+	
+
+
 	private static final String btn_sender = "btn_sender";
 	private static final String btn_receiver = "btn_receiver";
+	
+	private static OPCMainFrame mainFrame;
 
 	/**
 	 * Launch the application.
@@ -61,8 +75,7 @@ public class OPCMainFrame extends JFrame {
 		this.opcReceiver = new OPCReceiver();
 		this.buttonListener = new ButtonListener(this.opcSender, this.opcReceiver, this);
 		
-		Thread opcReceiverThread = new Thread(this.opcReceiver);
-		opcReceiverThread.start();
+
 		
 		setTitle("Industrie 4.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,13 +93,13 @@ public class OPCMainFrame extends JFrame {
 		tabbedPane.addTab("Main", null, panel_main, null);
 		panel_main.setLayout(null);
 		
-		JButton btn_start_sender = new JButton("Start Sender");
+		btn_start_sender = new JButton("Start Sender");
 		btn_start_sender.setActionCommand(btn_sender);
 		btn_start_sender.addActionListener(buttonListener);
 		btn_start_sender.setBounds(10, 11, 143, 47);
 		panel_main.add(btn_start_sender);
 		
-		JButton btn_start_receiver = new JButton("Start Receiver");
+		btn_start_receiver = new JButton("Start Receiver");
 		btn_start_receiver.setBounds(10, 69, 143, 47);
 		btn_start_receiver.setActionCommand(btn_receiver);
 		btn_start_receiver.addActionListener(buttonListener);
@@ -100,6 +113,10 @@ public class OPCMainFrame extends JFrame {
 		lb_receiver_status.setBounds(163, 69, 143, 47);
 		panel_main.add(lb_receiver_status);
 		
+		JLabel lb_cb = new JLabel("Source System");
+		lb_cb.setBounds(279, 23, 108, 23);
+		panel_main.add(lb_cb);
+		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Counter1", null, panel_1, null);
 		panel_1.setLayout(null);
@@ -108,6 +125,8 @@ public class OPCMainFrame extends JFrame {
 		tabbedPane.addTab("Expression1", null, panel_2, null);
 		panel_2.setLayout(null);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{contentPane}));
+		
+		mainFrame = this;
 	}
 
 	public JLabel getLb_sender_status() {
@@ -117,5 +136,14 @@ public class OPCMainFrame extends JFrame {
 	public JLabel getLb_receiver_status() {
 		return lb_receiver_status;
 	}
-	
+	public JButton getBtn_start_sender() {
+		return btn_start_sender;
+	}
+
+	public JButton getBtn_start_receiver() {
+		return btn_start_receiver;
+	}
+	public static void receiverEnded(){
+		mainFrame.buttonListener.toggleReceiver();
+	}
 }

@@ -10,6 +10,7 @@ public class ButtonListener implements ActionListener {
 	private OPCSender opcSender;
 	private OPCReceiver opcReceiver;
 	private OPCMainFrame mainFrame;
+ 
 	
 	private boolean opcSenderRunning;
 	private boolean opcReceiverRunning;
@@ -23,6 +24,7 @@ public class ButtonListener implements ActionListener {
 		this.opcReceiverRunning = false;
 		this.opcSenderRunning = false;
 		this.mainFrame = mainFrame;
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -42,21 +44,25 @@ public class ButtonListener implements ActionListener {
 			this.opcSender.startOPCAdapter();
 			this.opcSenderRunning = true;
 			this.mainFrame.getLb_sender_status().setText("Running");
+			this.mainFrame.getBtn_start_sender().setText("Stop Sender");
 		}else{
 			this.opcSender.stopOPCAdapter();
 			this.opcSenderRunning = false;
 			this.mainFrame.getLb_sender_status().setText("Not Running");
+			this.mainFrame.getBtn_start_sender().setText("Start Sender");
 		}
 	}
+
 	public void toggleReceiver(){
 		if(this.opcReceiverRunning == false){
-			this.opcReceiver.startReceiver();
 			this.opcReceiverRunning = true;
+			this.opcReceiver.startReceiver();
 			this.mainFrame.getLb_receiver_status().setText("Running");
+			this.mainFrame.getBtn_start_receiver().setText("Running");
 		}else{
-			this.opcReceiver.stopReceiver();
 			this.opcReceiverRunning = false;
 			this.mainFrame.getLb_receiver_status().setText("Not Running");
+			this.mainFrame.getBtn_start_receiver().setText("Start Receiver");
 		}
 		
 	}

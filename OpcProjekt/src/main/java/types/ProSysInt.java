@@ -27,15 +27,15 @@ import org.opcfoundation.ua.builtintypes.Variant;
 //		"serverPicoseconds"
 //})
 @XmlRootElement
-public class OpcInt extends Type{
+public class ProSysInt extends ProSysType{
 	@XmlElement//(required=true)
 	private int value;
 
 	
-	public OpcInt(){
+	public ProSysInt(){
 		
 	}
-	public OpcInt(String bezeichnung, Variant value, StatusCode statusCode,
+	public ProSysInt(String bezeichnung, Variant value, StatusCode statusCode,
 			DateTime sourceTimestamp, UnsignedShort sourcePicoseconds,
 			DateTime serverTimestamp, UnsignedShort serverPicoseconds){
 		super(bezeichnung, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);

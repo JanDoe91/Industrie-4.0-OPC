@@ -26,6 +26,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 
+import config.configStrings;
+
 //@XmlType(name="",propOrder={
 //		"nodeId",
 //		"value",
@@ -37,10 +39,10 @@ import com.rabbitmq.client.Channel;
 //})
 @XmlRootElement
 // (name = "Type")
-public abstract class Type <T>{
+public abstract class ProSysType <T>{
 
 	private final static String host = "localhost";
-	private final static String QUEUE_NAME = "ProSys_OPC";
+
 
 	@XmlElement
 	// (required=true)
@@ -66,11 +68,11 @@ public abstract class Type <T>{
 	// (required=true)
 	private String bezeichnung;
 
-	public Type() {
+	public ProSysType() {
 
 	}
 
-	public Type(String bezeichnung, StatusCode statusCode,
+	public ProSysType(String bezeichnung, StatusCode statusCode,
 			DateTime sourceTimestamp, UnsignedShort sourcePicoseconds,
 			DateTime serverTimestamp, UnsignedShort serverPicoseconds) {
 		this.statusCode = statusCode.getValueAsIntBits();
@@ -91,25 +93,25 @@ public abstract class Type <T>{
 			JAXBContext context = null;
 			switch (this.bezeichnung) {
 			case "Counter1":
-				context = JAXBContext.newInstance(OpcInt.class);
+				context = JAXBContext.newInstance(ProSysInt.class);
 				break;
 			case "Square1":
-				context = JAXBContext.newInstance(OpcDouble.class);
+				context = JAXBContext.newInstance(ProSysDouble.class);
 				break;
 			case "Expression1":
-				context = JAXBContext.newInstance(OpcDouble.class);
+				context = JAXBContext.newInstance(ProSysDouble.class);
 				break;
 			case "Random1":
-				context = JAXBContext.newInstance(OpcDouble.class);
+				context = JAXBContext.newInstance(ProSysDouble.class);
 				break;
 			case "Sinusoid1":
-				context = JAXBContext.newInstance(OpcDouble.class);
+				context = JAXBContext.newInstance(ProSysDouble.class);
 				break;
 			case "Sawtooth1":
-				context = JAXBContext.newInstance(OpcDouble.class);
+				context = JAXBContext.newInstance(ProSysDouble.class);
 				break;
 			case "Triangle1":
-				context = JAXBContext.newInstance(OpcDouble.class);
+				context = JAXBContext.newInstance(ProSysDouble.class);
 				break;
 			default:
 				context = null;
@@ -152,20 +154,21 @@ public abstract class Type <T>{
 		Channel channel = null;
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost(host);
+			factory.setHost(configStrings.queueIP); //+ ":" + configStrings.queuePort);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
-			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+			channel.queueDeclare(configStrings.queueName, false, false, false, null);
 			
 			//Set Header of Message with bezeichnung
 			BasicProperties.Builder prop = new BasicProperties.Builder();
 			Map<String, Object> headers = new HashMap <String, Object>();
-			headers.put("type", bezeichnung);
+			headers.put(configStrings.headerType, bezeichnung);
+			headers.put(configStrings.headerSourceSystem, configStrings.sourceSystemProSys);
 			prop.headers(headers);
 			BasicProperties theProp = prop.build();
 			
 			//Send the Message to Queue
-			channel.basicPublish("", QUEUE_NAME, theProp, message.getBytes());
+			channel.basicPublish("", configStrings.queueName, theProp, message.getBytes());
 			
 			System.out.println(" [x] Sent '" + message + "'");
 			channel.close();
@@ -198,13 +201,13 @@ public abstract class Type <T>{
 	}
 	
 	public T getValue(){
-		if( this instanceof OpcDouble){
-			OpcDouble tmp = (OpcDouble) this;
+		if( this instanceof ProSysDouble){
+			ProSysDouble tmp = (ProSysDouble) this;
 			T tmp2 = (T) Double.valueOf(tmp.getValue2());
 
 			return tmp2;
-		}else if(this instanceof OpcInt){
-			OpcInt tmp = (OpcInt) this;
+		}else if(this instanceof ProSysInt){
+			ProSysInt tmp = (ProSysInt) this;
 			T tmp2 = (T) Integer.valueOf(tmp.getValue2());
 
 			return tmp2;

@@ -9,8 +9,10 @@ import javax.xml.bind.Unmarshaller;
 
 import reporting.NewOPCEvent;
 import reporting.Reporter;
-import types.OpcDouble;
-import types.OpcInt;
+import types.PiNfc;
+import types.ProSysDouble;
+import types.ProSysInt;
+import ui.OPCMainFrame;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -18,8 +20,9 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
 import config.RecConfig;
+import config.configStrings;
 
-public class OPCReceiver<T> implements Runnable{
+public class OPCReceiver<T> {
 	private RecConfig config;
 	private Reporter reporter;
 	private Connection connection;
@@ -34,9 +37,6 @@ public class OPCReceiver<T> implements Runnable{
 		this.connection = null;
 		this.channel = null;
 		this.consumer = null;
-	}
-
-	public void startReceiver() {
 		try {
 
 			this.factory.setHost(this.config.getHost());
@@ -51,30 +51,35 @@ public class OPCReceiver<T> implements Runnable{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+	}
+
+	public void startReceiver() {
+
 		reporter.addExpression("select type.getValue() from reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Counter1'");
 		reporter.addExpression("select type.getValue() from reporting.NewOPCEvent.win:time(30 sec) where bezeichnung = 'Expression1'");
-		
-		
+
 		boolean messagesLeft = true;
 		while (messagesLeft == true) {
-			try{
-			QueueingConsumer.Delivery delivery = this.consumer.nextDelivery(2000);
-			if (delivery != null) {
-				String message = new String(delivery.getBody());
-				Map<String, Object> headers = delivery.getProperties()
-						.getHeaders();
-				String contentType = headers.get("type").toString();
-
-				this.createXML(message, contentType);
-			}else{
-				messagesLeft = false;
-			}}catch(Exception e){
+			try {
+				QueueingConsumer.Delivery delivery = this.consumer
+						.nextDelivery(200);
+				if (delivery != null) {
+					String message = new String(delivery.getBody());
+					Map<String, Object> headers = delivery.getProperties()
+							.getHeaders();
+					String contentType = headers.get(configStrings.headerType)
+							.toString();
+					this.createXML(message, contentType);
+				} else {
+					messagesLeft = false;
+					//OPCMainFrame.receiverEnded();
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	private void createXML(String message, String contentType) {
 
 		StringWriter sw = new StringWriter();
@@ -82,39 +87,65 @@ public class OPCReceiver<T> implements Runnable{
 
 		switch (contentType) {
 		case "Counter1":
-			this.createIntXML(message);
-			this.createIntXML(message);
+			this.createProSysIntXML(message);
+			// this.createIntXML(message);
 			break;
 		case "Square1":
-			this.createIntXML(message);
-			this.createIntXML(message);
+			this.createProSysIntXML(message);
+			// this.createIntXML(message);
+			break;
 		case "Expression1":
-			this.createDoubleXML(message);
-			this.createDoubleXML(message);
+			this.createProSysDoubleXML(message);
+			// this.createDoubleXML(message);
 			break;
 		case "Random1":
-			this.createDoubleXML(message);
-			this.createDoubleXML(message);
+			this.createProSysDoubleXML(message);
+			// this.createDoubleXML(message);
+			break;
 		case "Sinusoid1":
-			this.createDoubleXML(message);
-			this.createDoubleXML(message);
+			this.createProSysDoubleXML(message);
+			// this.createDoubleXML(message);
+			break;
 		case "Sawtooth1":
-			this.createDoubleXML(message);
-			this.createDoubleXML(message);
+			this.createProSysDoubleXML(message);
+			// this.createDoubleXML(message);
+			break;
 		case "Triangle1":
-			this.createDoubleXML(message);
-			this.createDoubleXML(message);
+			this.createProSysDoubleXML(message);
+			// this.createDoubleXML(message);
+			break;
+		case "PiTag":
+			this.createPiString(message);
+			break;
 		}
 
 	}
 
-	private void createDoubleXML(String message) {
+	private void createPiString(String message) {
+		try {
+			JAXBContext stringContext = JAXBContext.newInstance(PiNfc.class);
+			Unmarshaller jaxbUnmarshaller = stringContext.createUnmarshaller();
+
+			StringReader tmp = new StringReader(message);
+			PiNfc newString = (PiNfc) jaxbUnmarshaller.unmarshal(tmp);
+			System.out.println(newString.toString());
+			// NewOPCEvent opcEvent = new
+			// NewOPCEvent(newDouble.getBezeichnung(),
+			// newDouble);
+
+			// this.reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createProSysDoubleXML(String message) {
 		try {
 			JAXBContext doubleContext = JAXBContext
-					.newInstance(OpcDouble.class);
+					.newInstance(ProSysDouble.class);
 			Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
 
-			OpcDouble newDouble = (OpcDouble) jaxbUnmarshaller
+			ProSysDouble newDouble = (ProSysDouble) jaxbUnmarshaller
 					.unmarshal(new StringReader(message));
 
 			NewOPCEvent opcEvent = new NewOPCEvent(newDouble.getBezeichnung(),
@@ -126,13 +157,13 @@ public class OPCReceiver<T> implements Runnable{
 		}
 	}
 
-	private void createIntXML(String message) {
+	private void createProSysIntXML(String message) {
 		try {
-			JAXBContext doubleContext = JAXBContext.newInstance(OpcInt.class);
+			JAXBContext doubleContext = JAXBContext
+					.newInstance(ProSysInt.class);
 			Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
-
-			OpcInt newInt = (OpcInt) jaxbUnmarshaller
-					.unmarshal(new StringReader(message));
+			StringReader tmp = new StringReader(message);
+			ProSysInt newInt = (ProSysInt) jaxbUnmarshaller.unmarshal(tmp);
 
 			// Create and Send Event
 			NewOPCEvent opcEvent = new NewOPCEvent(newInt.getBezeichnung(),
@@ -153,8 +184,4 @@ public class OPCReceiver<T> implements Runnable{
 		}
 	}
 
-	@Override
-	public void run() {
-		
-	}
 }

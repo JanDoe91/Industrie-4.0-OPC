@@ -12,8 +12,8 @@ public class MainConfig {
 	private String QUEUE_NAME;
 	
 	public MainConfig (){
-		this.host = "localhost";
-		this.QUEUE_NAME = "ProSys_OPC";
+		this.host = configStrings.queueIP;
+		this.QUEUE_NAME = configStrings.queueName;
 	}
 
 	public String getHost() {

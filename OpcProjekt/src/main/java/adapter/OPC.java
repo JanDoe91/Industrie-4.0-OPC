@@ -22,8 +22,8 @@ import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 
-import types.OpcDouble;
-import types.OpcInt;
+import types.ProSysDouble;
+import types.ProSysInt;
 
 import com.prosysopc.ua.ApplicationIdentity;
 import com.prosysopc.ua.SecureIdentityException;
@@ -144,7 +144,7 @@ public class OPC extends Adapter {
 			DateTime e = arg1.getServerTimestamp();
 			UnsignedShort f = arg1.getServerPicoseconds();
 			String bezeichnung = "" + nodeId.getValue();
-			OpcInt opcInt = new OpcInt(bezeichnung, a, b, c, d, e, f);
+			ProSysInt opcInt = new ProSysInt(bezeichnung, a, b, c, d, e, f);
 			opcInt.writeXML();
 		}
 	}
@@ -152,7 +152,7 @@ public class OPC extends Adapter {
 	public static void createDoubleWriteXML(NodeId nodeId, DataValue arg1) {
 		if (arg1 != null) {
 			String bezeichnung = "" + nodeId.getValue();
-			OpcDouble opcDouble = new OpcDouble(bezeichnung, arg1.getValue(),
+			ProSysDouble opcDouble = new ProSysDouble(bezeichnung, arg1.getValue(),
 					arg1.getStatusCode(), arg1.getSourceTimestamp(),
 					arg1.getSourcePicoseconds(), arg1.getServerTimestamp(),
 					arg1.getServerPicoseconds());

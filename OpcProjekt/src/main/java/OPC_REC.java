@@ -9,8 +9,8 @@ import javax.xml.bind.Unmarshaller;
 import reporting.NewOPCEvent;
 import reporting.OPCListener;
 import reporting.Reporter;
-import types.OpcDouble;
-import types.OpcInt;
+import types.ProSysDouble;
+import types.ProSysInt;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
@@ -98,10 +98,10 @@ public class OPC_REC<T> {
 	private static void createDoubleXML(String message) {
 		try {
 			JAXBContext doubleContext = JAXBContext
-					.newInstance(OpcDouble.class);
+					.newInstance(ProSysDouble.class);
 			Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
 
-			OpcDouble newDouble = (OpcDouble) jaxbUnmarshaller
+			ProSysDouble newDouble = (ProSysDouble) jaxbUnmarshaller
 					.unmarshal(new StringReader(message));
 
 			NewOPCEvent opcEvent = new NewOPCEvent(newDouble.getBezeichnung(),
@@ -115,10 +115,10 @@ public class OPC_REC<T> {
 
 	private static void createIntXML(String message) {
 		try {
-			JAXBContext doubleContext = JAXBContext.newInstance(OpcInt.class);
+			JAXBContext doubleContext = JAXBContext.newInstance(ProSysInt.class);
 			Unmarshaller jaxbUnmarshaller = doubleContext.createUnmarshaller();
 
-			OpcInt newInt = (OpcInt) jaxbUnmarshaller
+			ProSysInt newInt = (ProSysInt) jaxbUnmarshaller
 					.unmarshal(new StringReader(message));
 
 			// Create and Send Event
