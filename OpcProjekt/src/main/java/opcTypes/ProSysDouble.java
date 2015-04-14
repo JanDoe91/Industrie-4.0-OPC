@@ -1,12 +1,5 @@
-package types;
+package opcTypes;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -27,22 +20,25 @@ import org.opcfoundation.ua.builtintypes.Variant;
 //		"serverPicoseconds"
 //})
 @XmlRootElement
-public class ProSysInt extends ProSysType{
+public class ProSysDouble<T> extends ProSysType <T>{
 	@XmlElement//(required=true)
-	private int value;
+	private double value;
 
 	
-	public ProSysInt(){
+	
+	public ProSysDouble(){
 		
 	}
-	public ProSysInt(String bezeichnung, Variant value, StatusCode statusCode,
+	public ProSysDouble(String bezeichnung, Variant value, StatusCode statusCode,
 			DateTime sourceTimestamp, UnsignedShort sourcePicoseconds,
 			DateTime serverTimestamp, UnsignedShort serverPicoseconds){
+		
 		super(bezeichnung, statusCode, sourceTimestamp, sourcePicoseconds, serverTimestamp, serverPicoseconds);
-		this.value = (int) value.getValue();
+		this.value = (double) value.getValue();
 	}
-	public int getValue2() {
+	public double getValue2() {
 		return value;
 	}
+	
 
 }

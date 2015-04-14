@@ -11,6 +11,7 @@ import javax.swing.JButton;
 
 
 
+
 import java.awt.Component;
 
 import javax.swing.JTabbedPane;
@@ -22,6 +23,7 @@ import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import operators.ERPReceiver;
 import operators.OPCReceiver;
 import operators.OPCSender;
 
@@ -32,14 +34,23 @@ import config.configStrings;
 public class OPCMainFrame extends JFrame {
 	private OPCSender opcSender;
 	private OPCReceiver opcReceiver;
+	private ERPReceiver erpCustomerReceiver;
+	private ERPReceiver erpMachineReceiver;
 	private JPanel contentPane;
 	private ButtonListener buttonListener;
 	
 	private JLabel lb_sender_status;
 	private JLabel lb_receiver_status;
+	private JLabel lb_erp_customer_receiver_status;
+	private JLabel lb_erp_machine_receiver_status;
+	
 	
 	private JButton btn_start_sender;
+
+
 	private JButton btn_start_receiver;
+	private JButton btn_start_erp_customer_receiver;
+	private JButton btn_start_erp_machine_receiver;
 	
 
 	
@@ -47,33 +58,22 @@ public class OPCMainFrame extends JFrame {
 
 	private static final String btn_sender = "btn_sender";
 	private static final String btn_receiver = "btn_receiver";
+	private static final String btn_erp_customer_receiver = "btn_erp_customer_receiver";
+	private static final String btn_erp_machine_receiver = "btn_erp_machine_receiver";
 	
 	private static OPCMainFrame mainFrame;
+	
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					OPCMainFrame frame = new OPCMainFrame();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
-	/**
-	 * Create the frame.
-	 */
+
 	public OPCMainFrame(String ServerUrl, Vector<String> dataItems) {
 		OPCSender tmpSender = new OPCSender(ServerUrl, dataItems);
 		this.opcSender = tmpSender;
 		this.opcReceiver = new OPCReceiver();
-		this.buttonListener = new ButtonListener(this.opcSender, this.opcReceiver, this);
+		this.erpCustomerReceiver = new ERPReceiver(configStrings.ERPCustomer_order_queue);
+		this.erpMachineReceiver = new ERPReceiver(configStrings.ERPMachine_order_queue);
+		
+		this.buttonListener = new ButtonListener(this.opcSender, this.opcReceiver, this, this.erpCustomerReceiver, this.erpMachineReceiver);
 		
 
 		
@@ -96,34 +96,42 @@ public class OPCMainFrame extends JFrame {
 		btn_start_sender = new JButton("Start Sender");
 		btn_start_sender.setActionCommand(btn_sender);
 		btn_start_sender.addActionListener(buttonListener);
-		btn_start_sender.setBounds(10, 11, 143, 47);
+		btn_start_sender.setBounds(10, 11, 231, 47);
 		panel_main.add(btn_start_sender);
 		
-		btn_start_receiver = new JButton("Start Receiver");
-		btn_start_receiver.setBounds(10, 69, 143, 47);
+		btn_start_receiver = new JButton("Start OPC Receiver");
+		btn_start_receiver.setBounds(10, 69, 231, 47);
 		btn_start_receiver.setActionCommand(btn_receiver);
 		btn_start_receiver.addActionListener(buttonListener);
 		panel_main.add(btn_start_receiver);
 		
 		lb_sender_status = new JLabel("Not Running");
-		lb_sender_status.setBounds(163, 11, 143, 47);
+		lb_sender_status.setBounds(251, 11, 143, 47);
 		panel_main.add(lb_sender_status);
 		
 		lb_receiver_status = new JLabel("Not Running");
-		lb_receiver_status.setBounds(163, 69, 143, 47);
+		lb_receiver_status.setBounds(251, 69, 143, 47);
 		panel_main.add(lb_receiver_status);
 		
-		JLabel lb_cb = new JLabel("Source System");
-		lb_cb.setBounds(279, 23, 108, 23);
-		panel_main.add(lb_cb);
+		btn_start_erp_customer_receiver = new JButton("Start ERP Customer Receiver");
+		btn_start_erp_customer_receiver.setActionCommand(btn_erp_customer_receiver);
+		btn_start_erp_customer_receiver.addActionListener(buttonListener);
+		btn_start_erp_customer_receiver.setBounds(10, 127, 231, 47);
+		panel_main.add(btn_start_erp_customer_receiver);
 		
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Counter1", null, panel_1, null);
-		panel_1.setLayout(null);
+		lb_erp_customer_receiver_status = new JLabel("Not Running");
+		lb_erp_customer_receiver_status.setBounds(251, 127, 143, 47);
+		panel_main.add(lb_erp_customer_receiver_status);
 		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Expression1", null, panel_2, null);
-		panel_2.setLayout(null);
+		btn_start_erp_machine_receiver = new JButton("Start ERP Machine Receiver");
+		btn_start_erp_machine_receiver.addActionListener(buttonListener);
+		btn_start_erp_machine_receiver.setActionCommand(btn_erp_machine_receiver);
+		btn_start_erp_machine_receiver.setBounds(10, 185, 231, 47);
+		panel_main.add(btn_start_erp_machine_receiver);
+		
+		lb_erp_machine_receiver_status = new JLabel("Not Running");
+		lb_erp_machine_receiver_status.setBounds(251, 185, 143, 47);
+		panel_main.add(lb_erp_machine_receiver_status);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{contentPane}));
 		
 		mainFrame = this;
@@ -143,7 +151,30 @@ public class OPCMainFrame extends JFrame {
 	public JButton getBtn_start_receiver() {
 		return btn_start_receiver;
 	}
-	public static void receiverEnded(){
+	public JButton getBtn_start_erp_customer_receiver() {
+		return btn_start_erp_customer_receiver;
+	}
+
+	public JButton getBtn_start_erp_machine_receiver() {
+		return btn_start_erp_machine_receiver;
+	}
+	public JLabel getLb_erp_machine_receiver_status() {
+		return lb_erp_machine_receiver_status;
+	}
+	public JLabel getLb_erp_customer_receiver_status() {
+		return lb_erp_customer_receiver_status;
+	}
+	
+	public static void OPCreceiverEnded(){
 		mainFrame.buttonListener.toggleReceiver();
 	}
+	public static void ERPreceiverEnded(ERPReceiver receiver){
+		if(receiver.getExchangeName()==configStrings.ERPCustomer_order_queue){
+			mainFrame.buttonListener.toggleERPCustomerReceiver();
+		}else if(receiver.getExchangeName()==configStrings.ERPMachine_order_queue){
+			mainFrame.buttonListener.toggleERPMachineReceiver();
+		}
+	
+	}
+	
 }

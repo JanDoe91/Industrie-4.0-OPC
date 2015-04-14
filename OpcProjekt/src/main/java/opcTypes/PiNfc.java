@@ -1,4 +1,4 @@
-package types;
+package opcTypes;
 
 
 import java.sql.Timestamp;

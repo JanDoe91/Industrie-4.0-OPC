@@ -1,6 +1,6 @@
 package reporting;
 
-import types.ProSysType;
+import opcTypes.ProSysType;
 
 public class NewOPCEvent {
 	private String bezeichnung;

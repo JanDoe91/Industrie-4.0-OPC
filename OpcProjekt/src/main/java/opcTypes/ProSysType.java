@@ -1,4 +1,4 @@
-package types;
+package opcTypes;
 
 import java.io.File;
 import java.io.IOException;
@@ -154,21 +154,21 @@ public abstract class ProSysType <T>{
 		Channel channel = null;
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost(configStrings.queueIP); //+ ":" + configStrings.queuePort);
+			factory.setHost(configStrings.OPCQueueIP); //+ ":" + configStrings.queuePort);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
-			channel.queueDeclare(configStrings.queueName, false, false, false, null);
+			channel.queueDeclare(configStrings.OPCQueueName, false, false, false, null);
 			
 			//Set Header of Message with bezeichnung
 			BasicProperties.Builder prop = new BasicProperties.Builder();
 			Map<String, Object> headers = new HashMap <String, Object>();
-			headers.put(configStrings.headerType, bezeichnung);
-			headers.put(configStrings.headerSourceSystem, configStrings.sourceSystemProSys);
+			headers.put(configStrings.OPCHeaderType, bezeichnung);
+			headers.put(configStrings.OPCHeaderSourceSystem, configStrings.OPCSourceSystemProSys);
 			prop.headers(headers);
 			BasicProperties theProp = prop.build();
 			
 			//Send the Message to Queue
-			channel.basicPublish("", configStrings.queueName, theProp, message.getBytes());
+			channel.basicPublish("", configStrings.OPCQueueName, theProp, message.getBytes());
 			
 			System.out.println(" [x] Sent '" + message + "'");
 			channel.close();

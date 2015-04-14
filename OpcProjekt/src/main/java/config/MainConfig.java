@@ -12,8 +12,8 @@ public class MainConfig {
 	private String QUEUE_NAME;
 	
 	public MainConfig (){
-		this.host = configStrings.queueIP;
-		this.QUEUE_NAME = configStrings.queueName;
+		this.host = configStrings.OPCQueueIP;
+		this.QUEUE_NAME = configStrings.OPCQueueName;
 	}
 
 	public String getHost() {

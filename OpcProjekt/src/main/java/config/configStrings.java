@@ -2,14 +2,18 @@ package config;
 
 public class configStrings {
 
-	public static final String queueName = "OPC_QUEUED_DATA";
-	public static final String queueIP = "localhost"; //"141.72.115.238";
-	public static final String queueUserName = "opc";
-	public static final String queuePassword = "123456";
-	public static final String queuePort = "5672";
+	public static final String OPCQueueName = "OPC_QUEUED_DATA";
+	public static final String OPCQueueIP = "localhost"; // "141.72.115.238";
+	public static final String OPCQueueUserName = "opc";
+	public static final String OPCQueuePassword = "123456";
+	public static final int OPCQueuePort = 5672;
+
+	public static final String OPCHeaderType = "type";
+	public static final String OPCHeaderSourceSystem = "sourceSystem";
+
+	public static final String OPCSourceSystemProSys = "proSys";
 	
-	public static final String headerType = "type";
-	public static final String headerSourceSystem = "sourceSystem";
 	
-	public static final String sourceSystemProSys = "proSys";
+	public static final String ERPCustomer_order_queue = "CUSTOMER_ORDER_QUEUE";
+	public static final String ERPMachine_order_queue = "MACHINE_ORDER_QUEUE";
 }

@@ -9,6 +9,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import opcTypes.ProSysDouble;
+import opcTypes.ProSysInt;
+
 import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.DateTime;
 import org.opcfoundation.ua.builtintypes.LocalizedText;
@@ -21,9 +24,6 @@ import org.opcfoundation.ua.core.ApplicationType;
 import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.transport.security.SecurityMode;
-
-import types.ProSysDouble;
-import types.ProSysInt;
 
 import com.prosysopc.ua.ApplicationIdentity;
 import com.prosysopc.ua.SecureIdentityException;

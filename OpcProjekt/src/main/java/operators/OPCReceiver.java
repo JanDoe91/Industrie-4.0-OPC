@@ -7,11 +7,11 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import opcTypes.PiNfc;
+import opcTypes.ProSysDouble;
+import opcTypes.ProSysInt;
 import reporting.NewOPCEvent;
 import reporting.Reporter;
-import types.PiNfc;
-import types.ProSysDouble;
-import types.ProSysInt;
 import ui.OPCMainFrame;
 
 import com.rabbitmq.client.Channel;
@@ -40,6 +40,9 @@ public class OPCReceiver<T> {
 		try {
 
 			this.factory.setHost(this.config.getHost());
+			this.factory.setUsername(configStrings.OPCQueueUserName);
+			this.factory.setPassword(configStrings.OPCQueuePassword);
+			this.factory.setPort(configStrings.OPCQueuePort);
 			this.connection = this.factory.newConnection();
 			this.channel = this.connection.createChannel();
 			this.channel.queueDeclare(this.config.getQUEUE_NAME(), false,
@@ -67,12 +70,12 @@ public class OPCReceiver<T> {
 					String message = new String(delivery.getBody());
 					Map<String, Object> headers = delivery.getProperties()
 							.getHeaders();
-					String contentType = headers.get(configStrings.headerType)
+					String contentType = headers.get(configStrings.OPCHeaderType)
 							.toString();
 					this.createXML(message, contentType);
 				} else {
 					messagesLeft = false;
-					//OPCMainFrame.receiverEnded();
+					OPCMainFrame.OPCreceiverEnded();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
