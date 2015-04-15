@@ -1,5 +1,10 @@
 package config;
 
+
+
+import java.util.Arrays;
+import java.util.Vector;
+
 public class configStrings {
 
 	public static final String OPCQueueName = "OPC_QUEUED_DATA";
@@ -16,4 +21,9 @@ public class configStrings {
 	
 	public static final String ERPCustomer_order_queue = "CUSTOMER_ORDER_QUEUE";
 	public static final String ERPMachine_order_queue = "MACHINE_ORDER_QUEUE";
+	
+	public static final String OPCProsysServerUrl = "opc.tcp://localhost:53530/OPCUA/SimulationServer";
+	
+	public static final Vector<String> dataItems = new Vector<String>(Arrays.asList("5;Counter1","5;Expression1"));
+
 }

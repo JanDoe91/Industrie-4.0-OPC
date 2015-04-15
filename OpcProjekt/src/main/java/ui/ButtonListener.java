@@ -6,9 +6,9 @@ import java.io.ObjectStreamException;
 
 import javax.xml.bind.JAXBException;
 
-import operators.ERPReceiver;
-import operators.OPCReceiver;
-import operators.OPCSender;
+import adapter.ERPReceiver;
+import adapter.OPCReceiver;
+import adapter.OPCSender;
 
 public class ButtonListener implements ActionListener {
 	private OPCSender opcSender;

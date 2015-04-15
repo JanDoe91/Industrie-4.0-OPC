@@ -1,4 +1,4 @@
-package operators;
+package adapter;
 
 import java.io.ObjectStreamException;
 
@@ -43,12 +43,12 @@ public class ERPReceiver {
 		this.consumer = null;
 		this.exchangeName = exchangeName;
 		try {
-			String queueName ="";
-			if(exchangeName == configStrings.ERPCustomer_order_queue){
-				queueName = configStrings.ERPCustomer_order_queue;
-			}else if (exchangeName == configStrings.ERPMachine_order_queue){
-				queueName = configStrings.ERPMachine_order_queue;
-			}
+//			String queueName ="";
+//			if(exchangeName == configStrings.ERPCustomer_order_queue){
+//				queueName = configStrings.ERPCustomer_order_queue;
+//			}else if (exchangeName == configStrings.ERPMachine_order_queue){
+//				queueName = configStrings.ERPMachine_order_queue;
+//			}
 			this.factory.setHost(this.config.getHost());
 			// this.factory.setUsername(configStrings.OPCQueueUserName);
 			// this.factory.setPassword(configStrings.OPCQueuePassword);
@@ -56,10 +56,10 @@ public class ERPReceiver {
 			this.connection = this.factory.newConnection();
 			this.channel = this.connection.createChannel();
 			this.channel.exchangeDeclare(exchangeName, "fanout");
-			//String queueName = this.channel.queueDeclare().getQueue();
+			String queueName = this.channel.queueDeclare().getQueue();
 			this.channel.queueBind(queueName, exchangeName, "");
-			// this.channel.queueDeclare(this.config.getQUEUE_NAME(), false,
-			// false, false, null);
+			//this.channel.queueDeclare(queueName, false,
+			//false, false, null);
 			this.consumer = new QueueingConsumer(this.channel);
 			this.channel.basicConsume(queueName, true, this.consumer);
 

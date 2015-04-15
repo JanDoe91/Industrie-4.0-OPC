@@ -1,13 +1,9 @@
 package adapter;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Locale;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import java.util.Vector;
 
 import opcTypes.ProSysDouble;
 import opcTypes.ProSysInt;
@@ -32,17 +28,36 @@ import com.prosysopc.ua.client.MonitoredDataItemListener;
 import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.UaClient;
 
-import config.MainConfig;
 import config.SendConfig;
 
-public class OPC extends Adapter {
+
+public class OPCSender {
+
+	
+	private SendConfig opcConfig;
 	private UaClient client;
-	public OPC(SendConfig config) {
-		
-		super(config);
+	
+
+	
+	public OPCSender(String ServerUrl, Vector<String> dataItemsOne){
+		SendConfig tmp = new SendConfig(ServerUrl, dataItemsOne);
+		this.opcConfig = tmp;
 		this.client = null;
 	}
+	
+	public void startOPCAdapter(){
 
+		try {
+			this.importData();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void stopOPCAdapter(){
+		this.disconnect();
+	}
+	
+	
 	protected static void initialize(UaClient client)
 			throws SecureIdentityException, IOException, UnknownHostException {
 		// *** Application Description is sent to the server
@@ -63,7 +78,7 @@ public class OPC extends Adapter {
 
 	public void createClient() throws Exception {
 		// Create client object
-		this.client = new UaClient(config.getServerUrl());
+		this.client = new UaClient(opcConfig.getServerUrl());
 		this.client.setSecurityMode(SecurityMode.NONE);
 
 		initialize(this.client);
@@ -76,9 +91,9 @@ public class OPC extends Adapter {
 		// Verbindungsaufbau
 		createClient();
 
-		for (int i = 0; i < config.getDataItems().size(); i++) {
+		for (int i = 0; i < opcConfig.getDataItems().size(); i++) {
 			// Addresierung
-			String string = config.getDataItems().get(i);
+			String string = opcConfig.getDataItems().get(i);
 			String[] parts = string.split(";");
 			int part1 = Integer.parseInt(parts[0]); // 004
 			final String part2 = parts[1]; // 034556

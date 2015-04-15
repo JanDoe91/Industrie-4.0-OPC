@@ -12,6 +12,7 @@ import javax.swing.JButton;
 
 
 
+
 import java.awt.Component;
 
 import javax.swing.JTabbedPane;
@@ -22,13 +23,11 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
-import operators.ERPReceiver;
-import operators.OPCReceiver;
-import operators.OPCSender;
-
 import javax.swing.JComboBox;
 
+import adapter.ERPReceiver;
+import adapter.OPCReceiver;
+import adapter.OPCSender;
 import config.configStrings;
 
 public class OPCMainFrame extends JFrame {
@@ -66,8 +65,8 @@ public class OPCMainFrame extends JFrame {
 
 
 
-	public OPCMainFrame(String ServerUrl, Vector<String> dataItems) {
-		OPCSender tmpSender = new OPCSender(ServerUrl, dataItems);
+	public OPCMainFrame() {
+		OPCSender tmpSender = new OPCSender(configStrings.OPCProsysServerUrl, configStrings.dataItems);
 		this.opcSender = tmpSender;
 		this.opcReceiver = new OPCReceiver();
 		this.erpCustomerReceiver = new ERPReceiver(configStrings.ERPCustomer_order_queue);

@@ -1,4 +1,4 @@
-package operators;
+package adapter;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -91,40 +91,33 @@ public class OPCReceiver<T> {
 		switch (contentType) {
 		case "Counter1":
 			this.createProSysIntXML(message);
-			// this.createIntXML(message);
 			break;
 		case "Square1":
 			this.createProSysIntXML(message);
-			// this.createIntXML(message);
 			break;
 		case "Expression1":
 			this.createProSysDoubleXML(message);
-			// this.createDoubleXML(message);
 			break;
 		case "Random1":
 			this.createProSysDoubleXML(message);
-			// this.createDoubleXML(message);
 			break;
 		case "Sinusoid1":
 			this.createProSysDoubleXML(message);
-			// this.createDoubleXML(message);
 			break;
 		case "Sawtooth1":
 			this.createProSysDoubleXML(message);
-			// this.createDoubleXML(message);
 			break;
 		case "Triangle1":
 			this.createProSysDoubleXML(message);
-			// this.createDoubleXML(message);
 			break;
 		case "PiTag":
-			this.createPiString(message);
+			this.createPiNfcTag(message);
 			break;
 		}
 
 	}
 
-	private void createPiString(String message) {
+	private void createPiNfcTag(String message) {
 		try {
 			JAXBContext stringContext = JAXBContext.newInstance(PiNfc.class);
 			Unmarshaller jaxbUnmarshaller = stringContext.createUnmarshaller();
@@ -132,11 +125,6 @@ public class OPCReceiver<T> {
 			StringReader tmp = new StringReader(message);
 			PiNfc newString = (PiNfc) jaxbUnmarshaller.unmarshal(tmp);
 			System.out.println(newString.toString());
-			// NewOPCEvent opcEvent = new
-			// NewOPCEvent(newDouble.getBezeichnung(),
-			// newDouble);
-
-			// this.reporter.getEpService().getEPRuntime().sendEvent(opcEvent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
